@@ -1,6 +1,6 @@
 # Advanced Database Systems Portfolio (MIT 8103)
 
-Practical portfolio for MIT 8103 Advanced Database Systems, 2026/2027 First Semester, University of Lagos.
+Practical portfolio for MIT 8103 Advanced Database Systems, 2026/2027 First Semester, Miva Open University.
 
 ## Case study: EkoMart Online
 
