@@ -1,0 +1,23 @@
+SET
+CREATE FUNCTION
+                   test                   |                                                           result                                                            
+------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------
+ PK: duplicate region id                  | PASS - duplicate key value violates unique constraint "region_pkey"
+ UNIQUE: duplicate customer email         | PASS - duplicate key value violates unique constraint "customer_email_key"
+ CHECK: invalid email format              | PASS - new row for relation "customer" violates check constraint "chk_customer_email"
+ NOT NULL: customer without surname       | PASS - null value in column "last_name" of relation "customer" violates not-null constraint
+ FK: order for non-existent customer      | PASS - insert or update on table "customer_order" violates foreign key constraint "customer_order_customer_id_fkey"
+ CHECK: negative product price            | PASS - new row for relation "product" violates check constraint "product_unit_price_check"
+ UNIQUE: duplicate SKU                    | PASS - duplicate key value violates unique constraint "product_sku_key"
+ CHECK: stock cannot go negative          | PASS - new row for relation "inventory" violates check constraint "inventory_quantity_on_hand_check"
+ CHECK: unknown order status              | PASS - new row for relation "customer_order" violates check constraint "chk_order_status"
+ CHECK: zero quantity order line          | PASS - new row for relation "order_item" violates check constraint "order_item_quantity_check"
+ UNIQUE: same product twice in one order  | PASS - duplicate key value violates unique constraint "uq_order_product"
+ CHECK: rating outside 1-5                | PASS - new row for relation "review" violates check constraint "review_rating_check"
+ CHECK: successful payment needs paid_at  | PASS - new row for relation "payment" violates check constraint "chk_payment_paid_at"
+ CHECK: delivered before shipped          | PASS - new row for relation "shipment" violates check constraint "chk_shipment_dates"
+ PARTIAL UNIQUE: second default address   | PASS - duplicate key value violates unique constraint "uq_address_one_default"
+ CHECK: category cannot be its own parent | PASS - new row for relation "category" violates check constraint "chk_category_not_own_parent"
+ FK: delete product that has been ordered | PASS - update or delete on table "product" violates foreign key constraint "inventory_product_id_fkey" on table "inventory"
+(17 rows)
+

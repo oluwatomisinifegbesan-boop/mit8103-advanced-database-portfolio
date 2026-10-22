@@ -1,0 +1,14 @@
+SET
+   table_name   | count  
+----------------+--------
+ product        |   2000
+ inventory      |  10000
+ address        |  20000
+ customer       |  20000
+ review         |  30927
+ customer_order | 200000
+ shipment       | 188992
+ payment        | 189646
+ order_item     | 500000
+(9 rows)
+
