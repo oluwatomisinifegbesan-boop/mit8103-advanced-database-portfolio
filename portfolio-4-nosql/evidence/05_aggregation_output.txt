@@ -1,0 +1,192 @@
+======================================================================
+PIPELINE 1: CATEGORY INVENTORY & VALUATION SUMMARY
+Business Objective: Management quarterly inventory audit by category
+======================================================================
+[
+  {
+    category: 'Electronics',
+    unique_product_count: 2,
+    total_variant_skus: 4,
+    total_units_on_hand: 93,
+    min_price_ngn: 345000,
+    max_price_ngn: 1850000,
+    avg_price_ngn: 1097500,
+    total_inventory_value_ngn: 60675000
+  },
+  {
+    category: 'Groceries',
+    unique_product_count: 1,
+    total_variant_skus: 2,
+    total_units_on_hand: 190,
+    min_price_ngn: 18500,
+    max_price_ngn: 18500,
+    avg_price_ngn: 18500,
+    total_inventory_value_ngn: 4955000
+  },
+  {
+    category: 'Fashion',
+    unique_product_count: 1,
+    total_variant_skus: 3,
+    total_units_on_hand: 47,
+    min_price_ngn: 95000,
+    max_price_ngn: 95000,
+    avg_price_ngn: 95000,
+    total_inventory_value_ngn: 4515000
+  },
+  {
+    category: 'Health & Beauty',
+    unique_product_count: 1,
+    total_variant_skus: 2,
+    total_units_on_hand: 125,
+    min_price_ngn: 6500,
+    max_price_ngn: 6500,
+    avg_price_ngn: 6500,
+    total_inventory_value_ngn: 1012500
+  }
+]
+
+======================================================================
+PIPELINE 2: VARIANT-LEVEL LOW-STOCK REORDER ALERT
+Business Objective: Automated replenishment alert for warehouse managers
+======================================================================
+[
+  {
+    parent_sku: 'EKM-LAP002',
+    product_title: 'Dell XPS 15 9530 Core i7',
+    category: 'Electronics',
+    variant_sku: 'EKM-LAP002-OLED',
+    stock_level: 6,
+    urgency: 'WARNING'
+  },
+  {
+    parent_sku: 'EKM-FSH003',
+    product_title: "Men's Luxury Hand-Embroidered 3-Piece Agbada",
+    category: 'Fashion',
+    variant_sku: 'EKM-FSH003-XL-ROY',
+    stock_level: 10,
+    urgency: 'WARNING'
+  },
+  {
+    parent_sku: 'EKM-LAP002',
+    product_title: 'Dell XPS 15 9530 Core i7',
+    category: 'Electronics',
+    variant_sku: 'EKM-LAP002-FHD',
+    stock_level: 12,
+    urgency: 'WARNING'
+  },
+  {
+    parent_sku: 'EKM-FSH003',
+    product_title: "Men's Luxury Hand-Embroidered 3-Piece Agbada",
+    category: 'Fashion',
+    variant_sku: 'EKM-FSH003-M-WHT',
+    stock_level: 15,
+    urgency: 'WARNING'
+  }
+]
+
+======================================================================
+PIPELINE 3: MULTI-FACETED E-COMMERCE SIDEBAR SEARCH ($facet)
+Business Objective: Produce complete faceted filter panel in 1 database roundtrip
+======================================================================
+[
+  {
+    price_ranges: [
+      {
+        _id: 0,
+        count: 2,
+        sample_products: [
+          'Golden Penny Semovita 10kg Bag',
+          'Organic Unrefined Nilotica Shea Butter Hair & Body Balm'
+        ]
+      },
+      {
+        _id: 50000,
+        count: 1,
+        sample_products: [
+          "Men's Luxury Hand-Embroidered 3-Piece Agbada"
+        ]
+      },
+      {
+        _id: 200000,
+        count: 1,
+        sample_products: [
+          'Tecno Camon 30 Pro 5G'
+        ]
+      },
+      {
+        _id: 1000000,
+        count: 1,
+        sample_products: [
+          'Dell XPS 15 9530 Core i7'
+        ]
+      }
+    ],
+    brand_distribution: [
+      {
+        _id: 'Lagos Tailors Guild',
+        count: 1
+      },
+      {
+        _id: 'Flour Mills of Nigeria',
+        count: 1
+      },
+      {
+        _id: 'Tecno',
+        count: 1
+      },
+      {
+        _id: 'Dell',
+        count: 1
+      },
+      {
+        _id: 'Ori Naturals',
+        count: 1
+      }
+    ],
+    tag_cloud: [
+      {
+        _id: 'organic',
+        count: 1
+      },
+      {
+        _id: 'android',
+        count: 1
+      },
+      {
+        _id: 'fashion',
+        count: 1
+      },
+      {
+        _id: 'fast-charging',
+        count: 1
+      },
+      {
+        _id: 'dinner',
+        count: 1
+      },
+      {
+        _id: 'beauty',
+        count: 1
+      }
+    ]
+  }
+]
+
+======================================================================
+PIPELINE 4: ACTIVE SHOPPING CARTS CONVERSION & PIPELINE VALUE
+Business Objective: Real-time marketing funnel & cart abandonment analysis
+======================================================================
+[
+  {
+    session_count: 2,
+    status: 'ACTIVE',
+    total_pipeline_value_ngn: 483500,
+    avg_cart_value_ngn: 241750
+  },
+  {
+    session_count: 1,
+    status: 'ABANDONED',
+    total_pipeline_value_ngn: 2100000,
+    avg_cart_value_ngn: 2100000
+  }
+]

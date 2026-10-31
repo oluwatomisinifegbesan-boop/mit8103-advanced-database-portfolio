@@ -1,0 +1,2 @@
+Created 'products' collection with JSON Schema validation.
+Created 'shopping_carts' collection with JSON Schema validation.

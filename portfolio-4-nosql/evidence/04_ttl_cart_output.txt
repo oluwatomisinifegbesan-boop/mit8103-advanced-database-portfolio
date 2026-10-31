@@ -1,0 +1,36 @@
+======================================================================
+1. THE PROBLEM: ABANDONED SHOPPING CARTS IN HIGH-SCALE E-COMMERCE
+======================================================================
+In high-volume e-commerce platforms like EkoMart Online, approximately
+70% of created shopping carts are abandoned without checkout.
+In relational systems (e.g. PostgreSQL), purging millions of stale carts
+requires scheduled batch DELETE queries that induce write-lock contention,
+table bloat, and vacuuming overhead.
+MongoDB provides native Time-To-Live (TTL) single-field indexes where a
+low-priority background thread (ttlMonitor) automatically evicts expired
+documents without application-level maintenance.
+
+[SUCCESS] Created standard 7-day TTL index 'idx_cart_ttl_7days'.
+[SUCCESS] Created partial TTL index 'idx_partial_ttl_abandoned'.
+
+======================================================================
+2. SLIDING SESSION RENEWAL: RESETTING TTL CLOCK ON USER ACTIVITY
+======================================================================
+Customer 101 adds a new item to their shopping cart.
+Cart updated. Matched: 1, Modified: 1
+{
+  customer_id: 101,
+  item_count: 3,
+  cart_total: 388500,
+  new_ttl_timestamp: ISODate('2026-10-31T22:19:05.819Z')
+}
+
+======================================================================
+3. TTL THREAD EVALUATION (WHAT THE ttlMonitor SEES)
+======================================================================
+Cutoff timestamp for 7-day expiration: 2026-10-24T22:19:05.826Z
+Total carts eligible for background deletion by MongoDB ttlMonitor: 1
+ -> Expired Cart ID: 6ae66958be428c5866aa5883, Customer: 103, Updated: 2026-10-23T22:19:04.624Z, Total: NGN 2100000
+Total active retained carts: 2
+ -> Retained Cart ID: 6ae66958be428c5866aa5882, Customer: 102, Updated: 2026-10-31T22:19:04.624Z, Total: NGN 95000
+ -> Retained Cart ID: 6ae66958be428c5866aa5881, Customer: 101, Updated: 2026-10-31T22:19:05.819Z, Total: NGN 388500

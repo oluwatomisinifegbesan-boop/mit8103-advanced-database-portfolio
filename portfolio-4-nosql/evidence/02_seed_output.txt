@@ -1,0 +1,2 @@
+Successfully seeded polymorphic product documents.
+Successfully seeded shopping cart sessions.

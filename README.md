@@ -23,7 +23,7 @@ Every portfolio activity uses this same case study. See [Portfolio 1](portfolio-
 | 1 | Database Design and Modelling | [`portfolio-1-database-design`](portfolio-1-database-design/) | Done |
 | 2 | Query Processing and Optimisation | [`portfolio-2-query-optimisation`](portfolio-2-query-optimisation/) | Done |
 | 3 | Transactions and Concurrency | [`portfolio-3-transactions-concurrency`](portfolio-3-transactions-concurrency/) | Done |
-| 4 | NoSQL and Advanced Data Models | [`portfolio-4-nosql`](portfolio-4-nosql/) | Not started |
+| 4 | NoSQL and Advanced Data Models | [`portfolio-4-nosql`](portfolio-4-nosql/) | Done |
 | 5 | Distributed and Cloud Database Exercise | [`portfolio-5-distributed-cloud`](portfolio-5-distributed-cloud/) | Not started |
 
 ## Technology

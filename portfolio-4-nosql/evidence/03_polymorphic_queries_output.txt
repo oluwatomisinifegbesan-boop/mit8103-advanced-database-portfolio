@@ -1,0 +1,149 @@
+Created 6 specialized NoSQL indexes successfully.
+
+--- QUERY 1: Nested Subdocument Query (Laptops with >= 16GB RAM) ---
+[
+  {
+    _id: ObjectId('6ae66958be428c5866aa587d'),
+    sku: 'EKM-LAP002',
+    title: 'Dell XPS 15 9530 Core i7',
+    price: 1850000,
+    attributes: {
+      processor: 'Intel Core i7-13700H',
+      ram_gb: 32,
+      gpu: 'NVIDIA GeForce RTX 4060 8GB GDDR6'
+    }
+  }
+]
+
+--- QUERY 2: Multi-Key Array Query (Cosmetics for Sensitive Skin) ---
+[
+  {
+    _id: ObjectId('6ae66958be428c5866aa5880'),
+    sku: 'EKM-BEA005',
+    title: 'Organic Unrefined Nilotica Shea Butter Hair & Body Balm',
+    brand: 'Ori Naturals',
+    attributes: {
+      skin_type: [
+        'Dry',
+        'Sensitive',
+        'Eczema-Prone'
+      ],
+      key_ingredients: [
+        'Raw Shea Butter',
+        'Cold-Pressed Argan Oil',
+        'Vitamin E',
+        'Lavender Essential Oil'
+      ]
+    }
+  }
+]
+
+--- QUERY 3: Full-Text Search (Search term: '5G Android') ---
+[
+  {
+    _id: ObjectId('6ae66958be428c5866aa587c'),
+    sku: 'EKM-PHN001',
+    title: 'Tecno Camon 30 Pro 5G',
+    brand: 'Tecno',
+    price: 345000,
+    score: 10.399999999999999
+  }
+]
+
+--- QUERY 4: Array Element Subdocument Filtering ($elemMatch on variants) ---
+[
+  {
+    _id: ObjectId('6ae66958be428c5866aa587c'),
+    sku: 'EKM-PHN001',
+    title: 'Tecno Camon 30 Pro 5G',
+    variants: [
+      {
+        variant_id: 'v1',
+        sku_suffix: '-SLV',
+        color: 'Iceland Silver',
+        price_modifier: 0,
+        stock: 45
+      },
+      {
+        variant_id: 'v2',
+        sku_suffix: '-BLK',
+        color: 'Clouddy White',
+        price_modifier: 0,
+        stock: 30
+      }
+    ]
+  },
+  {
+    _id: ObjectId('6ae66958be428c5866aa587e'),
+    sku: 'EKM-FSH003',
+    title: "Men's Luxury Hand-Embroidered 3-Piece Agbada",
+    variants: [
+      {
+        variant_id: 'v1',
+        sku_suffix: '-M-WHT',
+        size: 'M',
+        color: 'Crisp White',
+        price_modifier: 0,
+        stock: 15
+      },
+      {
+        variant_id: 'v2',
+        sku_suffix: '-L-WHT',
+        size: 'L',
+        color: 'Crisp White',
+        price_modifier: 0,
+        stock: 22
+      },
+      {
+        variant_id: 'v3',
+        sku_suffix: '-XL-ROY',
+        size: 'XL',
+        color: 'Royal Blue',
+        price_modifier: 5000,
+        stock: 10
+      }
+    ]
+  },
+  {
+    _id: ObjectId('6ae66958be428c5866aa587f'),
+    sku: 'EKM-GRO004',
+    title: 'Golden Penny Semovita 10kg Bag',
+    variants: [
+      {
+        variant_id: 'v1',
+        sku_suffix: '-SINGLE',
+        pack_size: '1x10kg',
+        price_modifier: 0,
+        stock: 150
+      },
+      {
+        variant_id: 'v2',
+        sku_suffix: '-BUNDLE3',
+        pack_size: '3x10kg Bundle',
+        price_modifier: 36000,
+        stock: 40
+      }
+    ]
+  },
+  {
+    _id: ObjectId('6ae66958be428c5866aa5880'),
+    sku: 'EKM-BEA005',
+    title: 'Organic Unrefined Nilotica Shea Butter Hair & Body Balm',
+    variants: [
+      {
+        variant_id: 'v1',
+        sku_suffix: '-250ML',
+        size: '250ml Jar',
+        price_modifier: 0,
+        stock: 85
+      },
+      {
+        variant_id: 'v2',
+        sku_suffix: '-500ML',
+        size: '500ml Family Jar',
+        price_modifier: 5000,
+        stock: 40
+      }
+    ]
+  }
+]
