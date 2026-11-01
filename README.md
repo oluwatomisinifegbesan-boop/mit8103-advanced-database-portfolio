@@ -24,7 +24,10 @@ Every portfolio activity uses this same case study. See [Portfolio 1](portfolio-
 | 2 | Query Processing and Optimisation | [`portfolio-2-query-optimisation`](portfolio-2-query-optimisation/) | Done |
 | 3 | Transactions and Concurrency | [`portfolio-3-transactions-concurrency`](portfolio-3-transactions-concurrency/) | Done |
 | 4 | NoSQL and Advanced Data Models | [`portfolio-4-nosql`](portfolio-4-nosql/) | Done |
-| 5 | Distributed and Cloud Database Exercise | [`portfolio-5-distributed-cloud`](portfolio-5-distributed-cloud/) | Not started |
+| 5 | Distributed and Cloud Database Exercise | [`portfolio-5-distributed-cloud`](portfolio-5-distributed-cloud/) | Done |
+
+## Final Portfolio Documentation & LMS Submission
+The comprehensive 2–3 page portfolio documentation, technical reflection, and AI-use declaration is available at [`FINAL_PORTFOLIO_DOCUMENTATION.md`](FINAL_PORTFOLIO_DOCUMENTATION.md).
 
 ## Technology
 

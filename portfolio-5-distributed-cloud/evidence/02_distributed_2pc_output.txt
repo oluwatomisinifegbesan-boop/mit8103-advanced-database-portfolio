@@ -1,0 +1,47 @@
+ max_prepared_transactions 
+---------------------------
+ 100
+(1 row)
+
+======================================================================
+SCENARIO 1: DISTRIBUTED ORDER FULFILLMENT ACROSS TWO REGIONAL WAREHOUSES
+Order #9001 requires item A from Lagos Hub (Warehouse 1, South West)
+and item B from Abuja Hub (Warehouse 2, North Central).
+Both regional database shards must decrement inventory atomically.
+======================================================================
+DO
+BEGIN
+UPDATE 1
+PREPARE TRANSACTION
+BEGIN
+UPDATE 1
+PREPARE TRANSACTION
+Phase 1 Complete: Both shards voted YES and persisted prepared state to WAL.
+
+--- GLOBAL IN-FLIGHT PREPARED TRANSACTIONS (pg_prepared_xacts) ---
+   global_transaction_id    |          prepared_at          |  owner   | database 
+----------------------------+-------------------------------+----------+----------
+ eko_order_9001_lagos_shard | 2026-11-01 19:42:15.104212+01 | postgres | ekomart
+ eko_order_9001_abuja_shard | 2026-11-01 19:42:15.128491+01 | postgres | ekomart
+(2 rows)
+
+
+--- PHASE 2: COORDINATOR ISSUES ATOMIC COMMIT TO ALL SHARDS ---
+COMMIT PREPARED
+COMMIT PREPARED
+Verification: Checking pg_prepared_xacts (should be empty):
+ active_prepared_count 
+-----------------------
+                     0
+(1 row)
+
+
+======================================================================
+SCENARIO 2: DISTRIBUTED RECOVERY & ROLLBACK ON PARTICIPANT FAILURE
+======================================================================
+BEGIN
+UPDATE 1
+PREPARE TRANSACTION
+Network partition detected on Abuja shard. Coordinator issuing ROLLBACK...
+ROLLBACK PREPARED
+Verification: Lagos inventory restored. Zero orphaned locks.

@@ -1,0 +1,95 @@
+DROP TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+INSERT 0 200000
+ANALYZE
+                       step                        
+---------------------------------------------------
+ --- REGIONAL ROW DISTRIBUTION ACROSS PARTITIONS ---
+(1 row)
+
+          partition_name          | order_count 
+----------------------------------+-------------
+ orders_north_central (Abuja Hub) |       27814
+ orders_north_east                |       18412
+ orders_north_west (Kano Hub)     |       28105
+ orders_south_east (Onitsha Hub)  |       23190
+ orders_south_south (PH Hub)      |       27941
+ orders_south_west (Lagos Hub)    |       74538
+(6 rows)
+
+
+======================================================================
+TEST 1: REGIONAL QUERY WITH EXPLICIT SHARD KEY (PARTITION PRUNING ACTIVE)
+Query target: Orders for Lagos & South West (region_id = 6)
+Expected Behavior: Planner scans ONLY orders_south_west; 5 partitions pruned.
+======================================================================
+                                                                         QUERY PLAN                                                                         
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=0.42..15.68 rows=20 width=34) (actual time=0.038..0.065 rows=20 loops=1)
+   Buffers: shared hit=21
+   ->  Index Scan Backward using orders_south_west_order_date_idx on orders_south_west partitioned_order  (cost=0.42..3840.12 rows=5032 width=34) (actual time=0.036..0.061 rows=20 loops=1)
+         Index Cond: (order_date >= '2026-10-01 00:00:00+00'::timestamp with time zone)
+         Filter: (region_id = 6)
+         Buffers: shared hit=21
+ Planning:
+   Buffers: shared hit=18
+ Planning Time: 0.198 ms
+ Execution Time: 0.088 ms
+(10 rows)
+
+[ANALYSIS]:
+Partition Pruning: SUCCESSFUL.
+The query optimizer evaluated 'region_id = 6' during static planning.
+Partitions orders_north_central, orders_north_east, orders_north_west, orders_south_east, and orders_south_south were PRUNED from the execution tree.
+Only 'orders_south_west' (74,538 rows) was accessed using a local B-Tree index scan.
+Execution time was 0.088 ms with only 21 buffer hits!
+
+
+======================================================================
+TEST 2: CROSS-PARTITION QUERY (FAN-OUT ACROSS ALL REGIONS)
+Query target: Orders with customer_id = 1042 without region filter
+Expected Behavior: Planner must scan index on ALL 6 partitions (scatter-gather).
+======================================================================
+                                                                         QUERY PLAN                                                                         
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=49.12..49.15 rows=11 width=26) (actual time=0.182..0.184 rows=10 loops=1)
+   Sort Key: partitioned_order.order_date DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=24
+   ->  Append  (cost=0.29..48.93 rows=11 width=26) (actual time=0.042..0.165 rows=10 loops=1)
+         Buffers: shared hit=24
+         ->  Index Scan using orders_north_central_customer_id_idx on orders_north_central partitioned_order_1  (cost=0.29..8.12 rows=2 width=26) (actual time=0.021..0.022 rows=1 loops=1)
+               Index Cond: (customer_id = 1042)
+               Buffers: shared hit=4
+         ->  Index Scan using orders_north_east_customer_id_idx on orders_north_east partitioned_order_2  (cost=0.29..8.10 rows=1 width=26) (actual time=0.015..0.016 rows=1 loops=1)
+               Index Cond: (customer_id = 1042)
+               Buffers: shared hit=4
+         ->  Index Scan using orders_north_west_customer_id_idx on orders_north_west partitioned_order_3  (cost=0.29..8.14 rows=2 width=26) (actual time=0.016..0.017 rows=1 loops=1)
+               Index Cond: (customer_id = 1042)
+               Buffers: shared hit=4
+         ->  Index Scan using orders_south_east_customer_id_idx on orders_south_east partitioned_order_4  (cost=0.29..8.11 rows=1 width=26) (actual time=0.014..0.015 rows=1 loops=1)
+               Index Cond: (customer_id = 1042)
+               Buffers: shared hit=4
+         ->  Index Scan using orders_south_south_customer_id_idx on orders_south_south partitioned_order_5  (cost=0.29..8.15 rows=2 width=26) (actual time=0.015..0.016 rows=2 loops=1)
+               Index Cond: (customer_id = 1042)
+               Buffers: shared hit=4
+         ->  Index Scan using orders_south_west_customer_id_idx on orders_south_west partitioned_order_6  (cost=0.29..8.25 rows=3 width=26) (actual time=0.018..0.020 rows=4 loops=1)
+               Index Cond: (customer_id = 1042)
+               Buffers: shared hit=4
+ Planning Time: 0.384 ms
+ Execution Time: 0.224 ms
+(27 rows)
+
+[ANALYSIS]:
+Scatter-Gather Fan-out: Because customer_id alone does not restrict region_id,
+the PostgreSQL query executor had to issue an 'Append' node querying all 6 partitions
+in parallel and sorting the aggregated result. While still fast via partition indexes,
+it demonstrates the increased resource cost of un-routed cross-shard queries.
