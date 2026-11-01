@@ -49,13 +49,13 @@ mit8103-advanced-database-portfolio/
 └── FINAL_PORTFOLIO_DOCUMENTATION.md       # LMS submission documentation and reflection
 ```
 
-### Portfolio 1: Database Design and Modelling (Score Weight: 7 Marks)
+### Portfolio 1: Database Design and Modelling 
 - **Relational Architecture:** Designed a comprehensive PostgreSQL schema encompassing 13 tables and 1 view in 3NF and BCNF. Surrogate identity keys (`GENERATED ALWAYS AS IDENTITY`) were paired with natural alternate unique keys (`product.sku`, `payment.reference`, `shipment.tracking_no`).
 - **Reproducible Seed Volume:** Developed reproducible seeding scripts producing **20,000 customers**, **2,000 products**, **10,000 inventory links**, **200,000 orders**, and **500,000 order lines**.
 - **Constraint Enforcement:** Implemented 17 strict database-level constraints including regex email/phone validation, positive pricing/quantity checks, non-negative stock checks (`quantity_on_hand >= 0`), delivery dates chronological sanity checks (`delivered_at >= shipped_at`), and partial unique indexes (`address WHERE is_default`).
 - **Evidence:** `portfolio-1-database-design/evidence/` contains schema descriptions, row counts, and test passes for all 17 constraints.
 
-### Portfolio 2: Query Processing and Optimisation (Score Weight: 7 Marks)
+### Portfolio 2: Query Processing and Optimisation 
 - **Bottleneck Analysis:** Profiled realistic OLTP, operational, and OLAP query workloads against the 500,000 order lines dataset using `EXPLAIN (ANALYZE, BUFFERS)`.
 - **Targeted Optimisation Strategies:**
   1. *Composite B-Tree Index* on `customer_order (customer_id, order_date DESC)`: Eliminated full-table sequential scans and sort steps for customer order lookups, delivering a **$93.2\times$ execution speedup** (35.4ms $\to$ 0.38ms) and a **99.5% buffer I/O reduction**.
@@ -64,7 +64,7 @@ mit8103-advanced-database-portfolio/
   4. *Materialized View* `mv_regional_category_sales` with unique index: Reduced executive regional sales aggregation runtime from 248.6ms to **0.95ms ($261.7\times$ speedup)** with support for non-blocking concurrent refresh.
 - **Evidence:** Full baseline vs. post-optimisation query execution plans documented in `portfolio-2-query-optimisation/evidence/`.
 
-### Portfolio 3: Transactions and Concurrency (Score Weight: 7 Marks)
+### Portfolio 3: Transactions and Concurrency 
 - **Atomic Multi-Table Checkout:** Implemented full transactional atomicity spanning 5 relational tables (`customer_order`, `order_item`, `inventory`, `payment`, `shipment`). Evaluated atomic rollback on payment decline and resilient checkout recovery using `SAVEPOINT`.
 - **Race Condition Reproduction:** Simulated concurrent shoppers attempting to purchase the last remaining stock during a flash sale, proving how uncoordinated read-modify-write statements cause the **Lost Update anomaly** and phantom inventory.
 - **Pessimistic Concurrency Control:** Resolved the race condition using `SELECT ... FOR UPDATE`, forcing transaction serialization in the `pg_locks` catalogue and safely rejecting out-of-stock orders without overselling. Evaluated non-blocking modifiers `NOWAIT` and `SKIP LOCKED`.
@@ -72,7 +72,7 @@ mit8103-advanced-database-portfolio/
 - **Deadlock Elimination:** Simulated multi-item cart circular wait deadlocks (`SQLSTATE 40P01`) and mathematically eliminated them using **Deterministic Resource Ordering** (`ORDER BY product_id ASC`).
 - **Evidence:** Documented transaction traces in `portfolio-3-transactions-concurrency/evidence/`.
 
-### Portfolio 4: NoSQL and Advanced Data Models (Score Weight: 7 Marks)
+### Portfolio 4: NoSQL and Advanced Data Models 
 - **Polyglot Persistence Architecture:** Deployed **MongoDB 7.0** alongside PostgreSQL to overcome the **Entity-Attribute-Value (EAV)** relational anti-pattern for EkoMart's highly polymorphic product catalogue (smartphones, traditional fashion, groceries, and skincare).
 - **Schema Validation & Embedded Documents:** Implemented collection-level `$jsonSchema` validation and embedded variant arrays, reducing multi-table relational joins to $O(1)$ single-document reads.
 - **Automated Lifecycle Purging (TTL Indexes):** Implemented single-field and partial **Time-To-Live (TTL) indexes** on `shopping_carts.updated_at` (`expireAfterSeconds: 604800`), delegating abandoned cart purging to MongoDB's internal `ttlMonitor` thread. Demonstrated sliding-window session renewal on user updates.
